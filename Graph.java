@@ -17,10 +17,11 @@ import javax.swing.SwingUtilities;
 import java.io.*; 
 
 // A class to represent a connected, directed and weighted graph 
-class Graph 
-{ 
-//	int height = getHeight();
-//	int width = getWidth();
+class Graph extends JComponent
+{
+	int height = getHeight();
+	int width = getWidth();
+	ArrayList<Edge> pathfound = new ArrayList<>();
 	
 	private static final long serialVersionUID = 1L;
 	private int V; // Number of vertices
@@ -63,6 +64,7 @@ class Graph
     	
     	path = this.finderhelper(path, end);
     	
+    	pathfound = path;
     	return path;
     }
     
@@ -217,6 +219,8 @@ class Graph
 	//This method does the drawing of the map
 	public void paintComponent(Graphics g) {
 		
+		g.setColor(Color.RED);
+		
 		ArrayList<Graph.Edge> edgeList = new ArrayList<Graph.Edge>();//adjacency list of current node
 		Node currNode;//current node
 		
@@ -261,11 +265,13 @@ class Graph
 	
 	//This method is supposed to show the map when called
 		public void showPath(Graphics g) {
-		ArrayList<Graph.Edge>edges = new ArrayList<Graph.Edge>();
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.setColor(Color.RED);
-		Stroke stroke = new BasicStroke(2f);
-		g2d.setStroke(stroke);
+		ArrayList<Graph.Edge>edges = pathfound;
+//		Graphics2D g2d = (Graphics2D) g;
+//		g2d.setColor(Color.RED);
+//		Stroke stroke = new BasicStroke(2f);
+//		g2d.setStroke(stroke);
+		
+//		g.setColor(Color.red);
 		
 		double startX;
 		double startY;
@@ -276,10 +282,8 @@ class Graph
 			startY = edges.get(i).src.lattitude;
 			endX = edges.get(i).dest.longitude;
 			endY = edges.get(i).dest.lattitude;
-			g.setColor(Color.red);
-			g2d.drawLine((int)(startX),(int)(startY),(int)(endX),(int)(endY));
-			
-			
+			//g.setColor(Color.red);
+			g.drawLine((int)(startX),(int)(startY),(int)(endX),(int)(endY));
 		}
 	}
 	
@@ -292,13 +296,10 @@ class Graph
 		g.buildGraph(f);
 		
 		ArrayList<Edge>path = g.PathFinder(g.nodes.get(0), g.nodes.get(25));
-		for(Edge e: path) {
-			System.out.println(e.id);
-		}
 		
 		JFrame frame = new JFrame();
 		Graphics G = frame.getGraphics();
-//		g.showPath(G); // uncomment this to show path. Might be problematic
+		g.showPath(G); // uncomment this to show path. Might be problematic
 		frame.add(g);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1700,1700);
