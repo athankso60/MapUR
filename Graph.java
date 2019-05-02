@@ -295,5 +295,13 @@ class Graph
 		for(Edge e: path) {
 			System.out.println(e.id);
 		}
+		
+		JFrame frame = new JFrame();
+		Graphics G = frame.getGraphics();
+//		g.showPath(G); // uncomment this to show path. Might be problematic
+		frame.add(g);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(1700,1700);
+		frame.setVisible(true);
 	}
 } 
