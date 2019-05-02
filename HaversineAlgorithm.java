@@ -22,7 +22,7 @@ public class HaversineAlgorithm {
     /**
      * Equatorial earth radius in Kilometers (KM).
      */
-    private static final int EARTH_RADIUS = 6371;
+    private static final int EARTH_RADIUS = 6371000;//in meters
 
     /**
      * <p>
@@ -35,8 +35,7 @@ public class HaversineAlgorithm {
      * @param endLong Final longitude
      * @return The distance in Kilometers (Km)
      */
-    public static double distanceInKm(double startLati, double startLong, double endLati, double endLong) {
-
+    public static double distanceInKm(double startLati, double startLong, double endLati, double endLong) { //in meters now
         double diffLati = Math.toRadians(endLati - startLati);
         double diffLong = Math.toRadians(endLong - startLong);
         /**
