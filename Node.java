@@ -7,10 +7,9 @@ public class Node implements Comparable<Node>{
 	String ID;
 	double longitude;
 	double lattitude;
-	int weight;
-	public int nodeNumber;
+	double weight;
 	public Node parent;
-
+	
 	public ArrayList<Graph.Edge>edges = new ArrayList<Graph.Edge>();
 	
 	
@@ -18,7 +17,7 @@ public class Node implements Comparable<Node>{
 	@Override
 	public String toString() {
 		return "Node [ID=" + ID + ", longitude=" + longitude + ", lattitude=" + lattitude + ", weight=" + weight
-				+ ", nodeNumber=" + nodeNumber + ", edges=" + edges + "]";
+				+ ", edges=" + edges + "]";
 	}
 
 
@@ -30,7 +29,6 @@ public class Node implements Comparable<Node>{
 		this.longitude = longitude;
 		this.lattitude = lattitude;
 		this.weight = 0;
-		this.nodeNumber = 0;
 		this.parent = null;
 	}
 	
@@ -61,23 +59,13 @@ public class Node implements Comparable<Node>{
 		this.lattitude = lattitude;
 	}
 	
-	public int getWeight() {
+	public double getWeight() {
 		return this.weight;
 	}
 	
-	public void setWeight(int n) {
+	public void setWeight(double n) {
 		this.weight = n ;
 	}
-	
-	public int getNodeNumber() {
-		return this.nodeNumber;
-	}
-	
-	public void setNodeNumber(int n) {
-		this.nodeNumber = n ;
-	}
-
-
 	
 	public int compareTo(Node o) {
 		if(this.weight < o.weight) {
