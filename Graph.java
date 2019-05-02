@@ -3,9 +3,17 @@
 import java.util.*;
 
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 
 import java.lang.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
+import java.awt.geom.Line2D;
+
+import javax.swing.SwingUtilities;
 import java.io.*; 
 
 // A class to represent a connected, directed and weighted graph 
