@@ -40,11 +40,14 @@ public class StreetMap extends JComponent {
 				}
 			}
 			try {
+				double distance  = 0;
 				ArrayList<Graph.Edge> path = g.PathFinder(start, end);
 				
 				for(Graph.Edge e: path) {
 					System.out.println(e.id);
+					distance = distance + e.weight;
 				}
+				System.out.println(distance + "m"+"  traveled");
 			}catch(NullPointerException n) {
 				System.out.println("didn't input the start ID and end ID correctly");
 			}
