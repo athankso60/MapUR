@@ -1,4 +1,4 @@
-// A Java program for Bellman-Ford's single source shortest path 
+ // A Java program for Bellman-Ford's single source shortest path 
 // algorithm. 
 import java.util.*;
 
@@ -14,9 +14,6 @@ class Graph
 //	int height = getHeight();
 //	int width = getWidth();
 	
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private int V; // Number of vertices
 	// A class to represent a weighted edge in graph 
@@ -34,7 +31,7 @@ class Graph
 		public Edge(String name) {
 			src = dest = null;
 			id = name;
-			weight = 0; 
+			weight = 0;
 		}
 		
 		public double getWeight() {
@@ -45,122 +42,91 @@ class Graph
 			this.weight = n;
 		}
 		
-		
 	} 
-
-
+	
+	
 	ArrayList<Node> nodes = new ArrayList<Node>();
+    PriorityQueue<Node> nodesrelaxed= new PriorityQueue<>();
+    
+    public ArrayList<Edge> PathFinder(Node start, Node end){
+    	ArrayList<Edge> path = new ArrayList<Edge>();
+    	
+    	this.dijkstra(start);
+    	
+    	path = this.finderhelper(path, end);
+    	
+    	return path;
+    }
+    
+    public ArrayList<Edge> finderhelper(ArrayList<Edge> path, Node n){
+    	//end condition
+    	if(n.parent.ID == n.ID) {
+    		return path;
+    	}
+    	
+    	//recursive steps
+    	for(Edge e: n.edges) {
+    		if(n.parent.ID.equals(e.dest.ID)) {
+    			path.add(e);
+    			return this.finderhelper(path, e.dest);
+    		}
+    	}
+    	return null;
+    }
+	
+	//Implementation of Dijsktra algorithm
+	public void dijkstra(Node src){
+		this.initialize(src);
+		
+		this.relax(src);
+	}
+	
+	
+	 
+	 public void relax(Node n) {
+		//recursive steps
+		double startweight = n.weight;
+		//PriorityQueue<Node> visited = new PriorityQueue<>();
+		for(Edge e: n.edges) {
+			//n.edges.get(i).dest
+			double length = e.weight;
+			double desweight = e.dest.weight;
 
-	// Creates a graph with V vertices and E edges 
-	Graph() 
-	{ 
-		for(int i = 0; i < nodes.size();i++) {
-			nodes.get(i).nodeNumber = i;
+			if((startweight+length)<desweight) {
+				e.dest.weight = startweight+length;
+				e.dest.parent = n;
+				nodesrelaxed.add(e.dest);
+			}
+			
+			//System.out.println(e.dest.ID+"         Visited");//
 		}
-	}
-	
-	
-	//Implementation of Dijsktra algorithm using priority Queue
-	public class DPQ { 
-	    private int dist[]; 
-	    private Set<Node> settled; 
-	    private PriorityQueue<Node> pq; 
-	    private int V; // Number of vertices 
-	    ArrayList<ArrayList<Edge>> adj; 
-	    public Graph graph;
-	  
-	    public DPQ(Graph g) 
-	    { 
-	    	//V would be the size of the nodes array
-	        this.V = g.nodes.size(); 
-	        dist = new int[V]; 
-	        settled = new HashSet<Node>(); 
-	        pq = new PriorityQueue<Node>(); 
-	        ArrayList<ArrayList<Edge>> a = new ArrayList<ArrayList<Edge>>();
-	        for(Node E:g.nodes) {
-	        	a.add(E.edges);
-	        	for(Edge e: E.edges) {
-	        		//System.out.println("edge id: " +e.id + "weight" + e.weight );
-	        	}
-	        }
-	        this.adj = a;
-	        this.graph = g;
-	    } 
-	  
-	    // Function for Dijkstra's Algorithm 
-	    public void dijkstra(Node src) 
-	    { 
-	  
-	        for (int i = 0; i < V; i++) { 
-	            dist[i] = Integer.MAX_VALUE; 
-	            graph.nodes.get(i).weight = Integer.MAX_VALUE;
-	        }
-	        // Add source node to the priority queue 
-	        
-	        pq.add(new Node(src.ID,src.longitude,src.lattitude)); 
-	        
-	        // Distance to the source is 0 
-	        dist[src.nodeNumber] = 0; 
-	        //src.weight = 0;
-	        System.out.println("src Node Number = "+ src.nodeNumber);
-	        while (settled.size() != V && pq!=null) { 
-	  
-	            // remove the minimum distance node  
-	            // from the priority queue  
-	        	Node u = pq.remove(); 
-	        	System.out.println("u's id: " +u.ID);
-	  
-	            // adding the node whose distance is 
-	            // finalized 
-	            settled.add(u); 
-	  
-	            e_Neighbours(u.nodeNumber); 
-	        } 
-	        
-	        
-	    } 
-	    
-	    
-	  
-	    // Function to process all the neighbours  
-	    // of the passed node 
-	    private void e_Neighbours(int u) 
-	    //u here is the node number of the current node
-	    { 
-	        int edgeDistance = -1; 
-	        int newDistance = -1; 
-	  
-	        // All the neighbors of v 
-	        for (int i = 0; i < adj.get(u).size(); i++) { 
-	            Node v = adj.get(u).get(i).src; 
-	  
-	            // If current node hasn't already been processed 
-	            if (!settled.contains(v)) { 
-	                edgeDistance = v.weight; 
-	                newDistance = dist[u] + edgeDistance; 
-	                
-	                System.out.println("e dis: "+edgeDistance);
-	                System.out.println("n dis: "+newDistance);
-	                // If new distance is cheaper in cost 
-	                if (newDistance < dist[v.nodeNumber]) 
-	                    dist[v.nodeNumber] = newDistance;
-	                	v.weight = newDistance;
-	                // Add the current node to the queue 
-	              //String iD, double longitude, double lattitude
-	                pq.add(new Node(v.ID, v.longitude,v.lattitude)); 
-	            } 
-	        } 
-	    } 
-	}
-	
+		
+		//end condition: no more stuff in the Priority Queque
+		try {
+		Node node = nodesrelaxed.remove();
+		//System.out.println(node);//
+		relax(node);
+		}catch(RuntimeException r) {
+			//System.out.println(r);
+		}
+	 }
+	 
+	 public void initialize(Node src) {
+		 
+		 for(Node n: this.nodes) {
+			 n.weight = Double.MAX_VALUE;
+			 //this.nodes_pq.add(n);
+		 }
+		 src.weight = 0;
+		 //this.nodes_pq.add(src);
+		 src.parent = src;
+	 }
 	
 	
 	
 	public void buildGraph(File f) {
 		
 		//int V =10, E = 10;
-		
-		
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(f));
 			String line;
@@ -171,14 +137,15 @@ class Graph
 				while((line=in.readLine())!=null) {
 					
 					String[] ar = line.split("	");
-					
-					System.out.println(ar[0]);
 					 
 					if(ar[0].equals("i")) {
 						Node Intersection = new Node(ar[1],Double.parseDouble(ar[2]),Double.parseDouble(ar[3]));
-						Intersection.nodeNumber = i;
+						
 						i++;
+						
+						//Adding
 						nodes.add(Intersection);
+						//nodes_pq.add(Intersection);
 					}
 					else if(ar[0].equals("r")) {
 						Edge road = new Edge(ar[1]);
@@ -189,12 +156,14 @@ class Graph
 								
 								nodes.get(j).edges.add(road);
 								road.src = nodes.get(j);
+								
 								srcFound = true;
 								
 							}
 							
 							else if(nodes.get(j).ID.equals(ar[3])) {
 								road.dest = nodes.get(j);
+								
 								desFound = true;
 							}
 							
@@ -204,16 +173,14 @@ class Graph
 						}
 						
 						double weight = HaversineAlgorithm.distanceInKm(road.src.getLattitude(), road.src.getLongitude(), road.dest.getLattitude(), road.dest.getLongitude());
-						road.setWeight(weight);			
+						road.setWeight(weight);
+						//adding the road back
+						Edge roadback = new Edge(road.id);
+						roadback.src = road.dest;
+						roadback.dest = road.src;
+						road.dest.edges.add(roadback);
 					}
-					
-					
-					
-					
-					
-					//System.out.println(i + " weight:"+ Integer.parseInt(ar[2]));
 					i++;
-				
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -223,7 +190,6 @@ class Graph
 		}catch(FileNotFoundException e) {
 			System.out.println(e);
 		}
-		
 	}
 	
 	public void drawMap(Graph graph, Graphics g) {
@@ -238,12 +204,7 @@ class Graph
 				g.drawLine((int)edgeList.get(i).src.longitude,(int) edgeList.get(i).src.lattitude,(int) edgeList.get(i).dest.longitude,(int)edgeList.get(i).dest.lattitude);//MIke will do the calculations to draw correctly
 			}
 		}
-		
 	}
-	
-	
-	
-	
 	
 	
 	
@@ -252,23 +213,10 @@ class Graph
 		File f = new File("ur.txt");
 		Graph g = new Graph();
 		g.buildGraph(f);
-		//System.out.println(g.nodes.size());
 		
-		DPQ d = g.new DPQ(g);
-		d.dijkstra(g.nodes.get(1));
-		for(int i=0; i<d.dist.length; i++) {
-			System.out.print("d:  ");
-			System.out.println(d.dist[i]);
-			System.out.print("g:  ");
-			System.out.println(g.nodes.get(i).weight);
-
+		ArrayList<Edge>path = g.PathFinder(g.nodes.get(0), g.nodes.get(25));
+		for(Edge e: path) {
+			System.out.println(e.id);
 		}
-
-			//System.out.println(g.nodes.get(1).nodeNumber);
-		
-		
-	
 	}
-
-	
 } 
