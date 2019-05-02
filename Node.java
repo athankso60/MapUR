@@ -2,18 +2,28 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 //This class creates nodes of graphs
-public class Node {
+public class Node implements Comparable<Node>{
 	
 	String ID;
 	double longitude;
 	double lattitude;
 	int weight;
 	public int nodeNumber;
+	public Node parent;
 
 	public ArrayList<Graph.Edge>edges = new ArrayList<Graph.Edge>();
 	
 	
 	
+	@Override
+	public String toString() {
+		return "Node [ID=" + ID + ", longitude=" + longitude + ", lattitude=" + lattitude + ", weight=" + weight
+				+ ", nodeNumber=" + nodeNumber + ", edges=" + edges + "]";
+	}
+
+
+
+
 	public Node(String iD, double longitude, double lattitude) {
 		super();
 		ID = iD;
@@ -21,10 +31,16 @@ public class Node {
 		this.lattitude = lattitude;
 		this.weight = 0;
 		this.nodeNumber = 0;
+		this.parent = null;
 	}
 	
+	public Node getParent() {
+		return this.parent;
+	}
 	
-	
+	public void setParent(Node n) {
+		this.parent = n;
+	}
 	
 	public String getID() {
 		return ID;
@@ -60,6 +76,22 @@ public class Node {
 	public void setNodeNumber(int n) {
 		this.nodeNumber = n ;
 	}
+
+
+	
+	public int compareTo(Node o) {
+		if(this.weight < o.weight) {
+			return -1;
+		}else if(this.weight == o.weight) {
+			return 0;
+		}else {
+			return 1;
+		}
+	}
+
+
+
+
 	
 
 	
