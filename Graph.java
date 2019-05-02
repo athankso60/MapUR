@@ -192,17 +192,86 @@ class Graph
 		}
 	}
 	
-	public void drawMap(Graph graph, Graphics g) {
+// 	public void drawMap(Graph graph, Graphics g) {
+// 		ArrayList<Graph.Edge> edgeList = new ArrayList<Graph.Edge>();//adjacency list of current node
+// 		Node currNode;//current node
+		
+// 		for (int i = 0; i < graph.nodes.size(); i++ ) {
+// 			edgeList = graph.nodes.get(i).edges;
+// 			currNode = graph.nodes.get(i);
+			
+// 			for(int j=0; j<edgeList.size(); j++) {
+// 				g.drawLine((int)edgeList.get(i).src.longitude,(int) edgeList.get(i).src.lattitude,(int) edgeList.get(i).dest.longitude,(int)edgeList.get(i).dest.lattitude);//MIke will do the calculations to draw correctly
+// 			}
+// 		}
+// 	}
+	
+	//This method does the drawing of the map
+	public void paintComponent(Graphics g) {
+		
 		ArrayList<Graph.Edge> edgeList = new ArrayList<Graph.Edge>();//adjacency list of current node
 		Node currNode;//current node
 		
-		for (int i = 0; i < graph.nodes.size(); i++ ) {
-			edgeList = graph.nodes.get(i).edges;
-			currNode = graph.nodes.get(i);
+		int index = this.nodes.size()/2;
+		double centerlat = this.nodes.get(index).lattitude;
+		double centerlong = this.nodes.get(index).longitude;
+		
+		index = this.nodes.size()-1;
+		double latdif = (centerlat - this.nodes.get(index).lattitude);
+		double longdif = centerlong - this.nodes.get(index).longitude;
+		
+		int x=10;
+		int y = (int)(1700/(10*longdif));
+		x = (int) (1700/(10*latdif));
+		
+		for (int i = 0; i <this.nodes.size(); i++ ) {
+			edgeList = this.nodes.get(i).edges;
+			currNode = this.nodes.get(i);
+			
+			
 			
 			for(int j=0; j<edgeList.size(); j++) {
-				g.drawLine((int)edgeList.get(i).src.longitude,(int) edgeList.get(i).src.lattitude,(int) edgeList.get(i).dest.longitude,(int)edgeList.get(i).dest.lattitude);//MIke will do the calculations to draw correctly
-			}
+//				double startX = edgeList.get(i).src.longitude;
+//				double startY = edgeList.get(i).src.lattitude;
+//				double endX = edgeList.get(i).dest.longitude;
+//				double endY = edgeList.get(i).dest.lattitude;
+//				System.out.println((int)(Math.abs(startX - 43.121)*1000000)+" "+(int)(Math.abs(startY + 77.630)*1000000)+" "+(int)(Math.abs(endX - 43.121)*1000000)+" "+(int) (Math.abs(endY+77.630)*1000000));
+//				//g.drawLine((int)edgeList.get(i).src.longitude,(int) edgeList.get(i).src.lattitude,(int) edgeList.get(i).dest.longitude,(int)edgeList.get(i).dest.lattitude);//Mike will do the calculations to draw correctly
+//				g.drawLine((int)(Math.abs(startX - 43.121)*100000), (int)(Math.abs(startY + 77.630)*100000), (int)(Math.abs(endX - 43.121)*100000),(int) (Math.abs(endY+77.630)*100000));
+				
+				double startX = (edgeList.get(j).src.longitude - centerlong)*y+500;
+				double startY = (edgeList.get(j).src.lattitude - centerlat)*x+500;
+				double endX = (edgeList.get(j).dest.longitude - centerlong)*y+500;
+				double endY = (edgeList.get(j).dest.lattitude - centerlat)*x+500;
+				
+				System.out.println(startX+" " +startY+" " +endX+" " +endY);
+				g.drawLine((int)startX, (int)startY, (int)endX, (int)endY);
+				//g.drawLine(1000, 1000, 1044, 993);
+				}
+		}
+	}
+	
+	//This method is supposed to show the map when called
+		public void showPath(Graphics g) {
+		ArrayList<Graph.Edge>edges = new ArrayList<Graph.Edge>();
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setColor(Color.RED);
+		Stroke stroke = new BasicStroke(2f);
+		g2d.setStroke(stroke);
+		
+		double startX;
+		double startY;
+		double endX;
+		double endY;
+		for(int i =0; i < edges.size(); i++) {
+			startX = edges.get(i).src.longitude;
+			startY = edges.get(i).src.lattitude;
+			endX = edges.get(i).dest.longitude;
+			endY = edges.get(i).dest.lattitude;
+			g.setColor(Color.red);
+			g2d.drawLine((int)(startX),(int)(startY),(int)(endX),(int)(endY));
+			
+			
 		}
 	}
 	
