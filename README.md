@@ -6,3 +6,5 @@ Build graph from information
 Do Dijstra to obtain shortest distances from each Node
 Draw map: Scale with size of window ie. (latitude/by max lattitude)*getHeight and same for longitude I guess.
 Show by drawing the graph.
+
+All that's pretty much done now!
