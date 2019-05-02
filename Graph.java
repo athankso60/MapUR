@@ -22,6 +22,7 @@ class Graph extends JComponent
 	int height = getHeight();
 	int width = getWidth();
 	ArrayList<Edge> pathfound = new ArrayList<>();
+	boolean highlight = false;
 	
 	private static final long serialVersionUID = 1L;
 	private int V; // Number of vertices
@@ -219,8 +220,8 @@ class Graph extends JComponent
 	//This method does the drawing of the map
 	public void paintComponent(Graphics g) {
 		
-		g.setColor(Color.RED);
 		
+		g.setColor(Color.black);
 		ArrayList<Graph.Edge> edgeList = new ArrayList<Graph.Edge>();//adjacency list of current node
 		Node currNode;//current node
 		
@@ -236,6 +237,7 @@ class Graph extends JComponent
 		int y = (int)(1700/(10*longdif));
 		x = (int) (1700/(10*latdif));
 		
+		try {
 		for (int i = 0; i <this.nodes.size(); i++ ) {
 			edgeList = this.nodes.get(i).edges;
 			currNode = this.nodes.get(i);
@@ -243,66 +245,106 @@ class Graph extends JComponent
 			
 			
 			for(int j=0; j<edgeList.size(); j++) {
-//				double startX = edgeList.get(i).src.longitude;
-//				double startY = edgeList.get(i).src.lattitude;
-//				double endX = edgeList.get(i).dest.longitude;
-//				double endY = edgeList.get(i).dest.lattitude;
-//				System.out.println((int)(Math.abs(startX - 43.121)*1000000)+" "+(int)(Math.abs(startY + 77.630)*1000000)+" "+(int)(Math.abs(endX - 43.121)*1000000)+" "+(int) (Math.abs(endY+77.630)*1000000));
-//				//g.drawLine((int)edgeList.get(i).src.longitude,(int) edgeList.get(i).src.lattitude,(int) edgeList.get(i).dest.longitude,(int)edgeList.get(i).dest.lattitude);//Mike will do the calculations to draw correctly
-//				g.drawLine((int)(Math.abs(startX - 43.121)*100000), (int)(Math.abs(startY + 77.630)*100000), (int)(Math.abs(endX - 43.121)*100000),(int) (Math.abs(endY+77.630)*100000));
+
+				for(Edge e:this.pathfound) {
+					if(e.id.equals(edgeList.get(j).id)) {
+						g.setColor(Color.red);
+					}
+				}
 				
 				double startX = (edgeList.get(j).src.longitude - centerlong)*y+500;
 				double startY = (edgeList.get(j).src.lattitude - centerlat)*x+500;
 				double endX = (edgeList.get(j).dest.longitude - centerlong)*y+500;
 				double endY = (edgeList.get(j).dest.lattitude - centerlat)*x+500;
 				
-				System.out.println(startX+" " +startY+" " +endX+" " +endY);
+				try {
+				//System.out.println(startX+" " +startY+" " +endX+" " +endY);
 				g.drawLine((int)startX, (int)startY, (int)endX, (int)endY);
+				g.setColor(Color.black);
 				//g.drawLine(1000, 1000, 1044, 993);
+				}catch(NullPointerException e) {
+					//System.out.println(e);
 				}
+				}
+		}
+		}catch(NullPointerException e) {
+			
+		}
+		
+		if(highlight == true) {
+			g.setColor(Color.red);
+			ArrayList<Graph.Edge>edges = this.pathfound;
+//			Graphics2D g2d = (Graphics2D) g;
+//			g2d.setColor(Color.RED);
+//			Stroke stroke = new BasicStroke(2f);
+//			g2d.setStroke(stroke);
+			
+			
+			
+			double startX;
+			double startY;
+			double endX;
+			double endY;
+			for(int i =0; i < edges.size(); i++) {
+				startX = edges.get(i).src.longitude;
+				startY = edges.get(i).src.lattitude;
+				endX = edges.get(i).dest.longitude;
+				endY = edges.get(i).dest.lattitude;
+				//g.setColor(Color.red);
+				g.drawLine((int)(startX),(int)(startY),(int)(endX),(int)(endY));
+			}
 		}
 	}
 	
 	//This method is supposed to show the map when called
-		public void showPath(Graphics g) {
-		ArrayList<Graph.Edge>edges = pathfound;
-//		Graphics2D g2d = (Graphics2D) g;
-//		g2d.setColor(Color.RED);
-//		Stroke stroke = new BasicStroke(2f);
-//		g2d.setStroke(stroke);
-		
-//		g.setColor(Color.red);
-		
-		double startX;
-		double startY;
-		double endX;
-		double endY;
-		for(int i =0; i < edges.size(); i++) {
-			startX = edges.get(i).src.longitude;
-			startY = edges.get(i).src.lattitude;
-			endX = edges.get(i).dest.longitude;
-			endY = edges.get(i).dest.lattitude;
-			//g.setColor(Color.red);
-			g.drawLine((int)(startX),(int)(startY),(int)(endX),(int)(endY));
-		}
-	}
+//		public void showPath(Graphics g) {
+//		ArrayList<Graph.Edge>edges = pathfound;
+////		Graphics2D g2d = (Graphics2D) g;
+////		g2d.setColor(Color.RED);
+////		Stroke stroke = new BasicStroke(2f);
+////		g2d.setStroke(stroke);
+//		
+////		g.setColor(Color.red);
+//		
+//		double startX;
+//		double startY;
+//		double endX;
+//		double endY;
+//		for(int i =0; i < edges.size(); i++) {
+//			startX = edges.get(i).src.longitude;
+//			startY = edges.get(i).src.lattitude;
+//			endX = edges.get(i).dest.longitude;
+//			endY = edges.get(i).dest.lattitude;
+//			//g.setColor(Color.red);
+//			g.drawLine((int)(startX),(int)(startY),(int)(endX),(int)(endY));
+//		}
+//	}
 	
 	
 	
 	
-	public static void main(String[] args) {
-		File f = new File("ur.txt");
-		Graph g = new Graph();
-		g.buildGraph(f);
-		
-		ArrayList<Edge>path = g.PathFinder(g.nodes.get(0), g.nodes.get(25));
-		
-		JFrame frame = new JFrame();
-		Graphics G = frame.getGraphics();
-		g.showPath(G); // uncomment this to show path. Might be problematic
-		frame.add(g);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(1700,1700);
-		frame.setVisible(true);
-	}
+//	public static void main(String[] args) {
+//		File f = new File("ur.txt");
+//		Graph g = new Graph();
+//		g.buildGraph(f);
+//		
+//		ArrayList<Edge>path = g.PathFinder(g.nodes.get(0), g.nodes.get(25));
+//		
+//		for(int i = 0; i<path.size();i++) {
+//			System.out.println("Path: "+path.get(i).id);
+//		}
+//		
+//		g.highlight = true;
+//		g.repaint();
+//		
+//		JFrame frame = new JFrame();
+////		Graphics G = frame.getGraphics();
+////		g.showPath(G); // uncomment this to show path. Might be problematic
+//		frame.add(g);
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame.setSize(1700,1700);
+//		frame.setVisible(true);
+//		
+//		
+//	}
 } 
